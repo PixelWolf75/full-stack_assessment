@@ -1,0 +1,10 @@
+CREATE TABLE Products:
+id (SERIAL PRIMARY KEY)
+name (VARCHAR NOT NULL)
+sku (VARCHAR UNIQUE NOT NULL)
+price_cents (INTEGER NOT NULL, CHECK >= 0)
+stock_qty (INTEGER NOT NULL, CHECK >= 0)
+created_at (TIMESTAMP)
+CREATE TABLE Orders:
+
+CREATE TABLE OrderItems:
