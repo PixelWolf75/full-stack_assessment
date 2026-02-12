@@ -1,4 +1,18 @@
-FROM ubuntu:latest
-LABEL authors="eric"
+FROM node:18-alpine
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY src/db .
+
+# Expose port
+EXPOSE 3001
+
+# Start command (overridden in docker-compose for dev)
+CMD ["npm", "run", "dev"]

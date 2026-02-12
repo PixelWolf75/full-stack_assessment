@@ -46,10 +46,10 @@ async function seed(): Promise<void> {
 
     // Show count of what was seeded
     const { rows } = await client.query('SELECT COUNT(*) FROM products');
-    console.log(`✅ Seed complete — ${rows[0].count} products in database`);
+    console.log(`Seed complete — ${rows[0].count} products in database`);
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('❌ Seeding failed:', err);
+    console.error('Seeding failed:', err);
     throw err;
   } finally {
     client.release();

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/api/src/db/schema.ts" value="83daa58f-61b3-4e54-b45f-64b79c4c5f56" />
+    <file url="file://$PROJECT_DIR$/api/src/services/products.service.ts" value="83daa58f-61b3-4e54-b45f-64b79c4c5f56" />
+  </component>
+</project>

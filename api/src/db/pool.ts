@@ -7,10 +7,10 @@ const pool = new Pool({
 // Test connection on startup
 pool.connect((err, client, release) => {
   if (err) {
-    console.error('❌ Failed to connect to database:', err.message);
+    console.error('Failed to connect to database:', err.message);
     return;
   }
-  console.log('✅ Database connected successfully');
+  console.log('Database connected successfully');
   release();
 });
 

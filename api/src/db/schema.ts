@@ -4,7 +4,7 @@ async function createSchema(): Promise<void> {
   const client = await pool.connect();
 
   try {
-    console.log('🔧 Running schema migrations...');
+    console.log('Running schema migrations...');
 
     await client.query('BEGIN');
 
@@ -70,10 +70,10 @@ async function createSchema(): Promise<void> {
 
     await client.query('COMMIT');
 
-    console.log('✅ Schema created successfully');
+    console.log('Schema created successfully');
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('❌ Schema migration failed:', err);
+    console.error('Schema migration failed:', err);
     throw err;
   } finally {
     client.release();
