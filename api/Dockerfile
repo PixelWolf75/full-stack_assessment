@@ -11,6 +11,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Compile TypeScript → JavaScript into dist/
+RUN npm run build
+
 # Expose port
 EXPOSE 3001
 
