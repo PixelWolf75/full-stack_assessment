@@ -7,10 +7,10 @@ services:
     container_name: ecommerce-db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: ecommerce
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -28,7 +28,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3001
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/ecommerce
+      DATABASE_URL: postgresql://postgres:password@db:5432/ecommerce
     ports:
       - "3001:3001"
     volumes:
@@ -46,9 +46,9 @@ services:
       dockerfile: Dockerfile
     container_name: ecommerce-web
     environment:
-      REACT_APP_API_URL: http://localhost:3001
+      REACT_APP_API_URL: http://api:3001
     ports:
-      - "3000:3000"
+      - "3005:3000"
     volumes:
       - ./web:/app
       - /app/node_modules

@@ -1,10 +1,10 @@
 import { Router } from "express";
 import * as controller from "../controllers/products.controller";
 
-const router = Router();
+const productRouter = Router();
 
-router.get("/", controller.getProducts);
-router.post("/", controller.createProduct);
-router.patch("/:id", controller.updateProduct);
+productRouter.get("/", controller.getProducts);
+productRouter.post("/", controller.createProduct);
+productRouter.patch("/:id", controller.updateProduct);
 
-export default router;
+export default productRouter;

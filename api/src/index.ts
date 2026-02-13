@@ -3,6 +3,10 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import initDatabase from './db';
 
+// Import your routes
+import orderRouter from "./routes/orders.routes";
+import productRouter from "./routes/products.routes";
+
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
@@ -15,18 +19,16 @@ app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// TODO: mount your route files here
-// import productRoutes from './routes/products';
-// import orderRoutes from './routes/orders';
-// app.use('/products', productRoutes);
-// app.use('/orders', orderRoutes);
+// Mount your routes
+app.use('/products', productRouter);
+app.use('/orders', orderRouter);
 
 // Start server only after DB is ready
 async function start(): Promise<void> {
   await initDatabase();
 
   app.listen(port, () => {
-    console.log(`🚀 Server running at http://localhost:${port}`);
+    console.log(`Server running at http://localhost:${port}`);
   });
 }
 

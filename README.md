@@ -1,3 +1,7 @@
 # full-stack_assessment
 
-Test commit message
+
+
+Database port is on 5433
+
+React web page is on http://localhost:3005/
