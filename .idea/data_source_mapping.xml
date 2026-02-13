@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/f598587d-b5b2-4c53-a79e-6814584ce974/console.sql" value="f598587d-b5b2-4c53-a79e-6814584ce974" />
     <file url="file://$PROJECT_DIR$/api/src/db/seed.ts" value="f598587d-b5b2-4c53-a79e-6814584ce974" />
     <file url="file://$PROJECT_DIR$/api/src/services/orders.service.ts" value="f598587d-b5b2-4c53-a79e-6814584ce974" />
   </component>

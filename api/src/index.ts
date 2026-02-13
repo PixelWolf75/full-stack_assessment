@@ -10,8 +10,18 @@ import productRouter from "./routes/products.routes";
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
+// CORS configuration (allowing only specific origin for security)
+const corsOptions = {
+  origin: ['http://localhost:3005', 'http://web:3005'],  // Allow frontend container in Docker or localhost
+  methods: ['GET', 'POST', 'PATCH'],  // Allow necessary methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
+};
+
+app.use(cors(corsOptions), (req, res, next) => {
+  console.log('CORS headers applied');
+  next();
+});
+
 app.use(express.json());
 
 // Health check
