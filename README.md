@@ -1,14 +1,50 @@
-# full-stack_assessment
+# Full-Stack Assessment
+A full-stack TypeScript project for managing products and creating orders.
 
-This a fullstack typescript project that manages products and allows users to create orders with
-said products.
+## Features
 
-Each Product contains: an id, name, sku(id of the product itself), price in cents, stock quantity and date it was created at in the database.
+### Products
 
-Each Order contains: an id, the time the order was created, and the order items which is the product including its details with the price at the time of purchase and the stock  purchased.
+- Each product has: id, name, sku (unique), price_cents, stock_qty, created_at.
 
-Products can be added to the database
+- Products can be added or edited via the frontend.
 
-Database port is on 5433
+  - Fields are required and validated:
 
-React web page is on http://localhost:3005/
+    - price_cents and stock_qty must be whole numbers ≥ 0.
+
+    - sku must be unique.
+
+  - Invalid input shows an error until corrected or cancelled.
+
+- Products can be searched and sorted by name, price, stock, or creation date (ascending/descending).
+
+### Orders
+
+- Each order has: id, created_at, and order_items (product details, price at purchase, quantity).
+
+- Orders are created by selecting products and specifying quantities.
+
+  - Product stock is deducted and cannot go below 0.
+
+  - Total cost is calculated and displayed.
+
+  - Order date is automatically recorded.
+
+## Running the Project
+
+1. Start the app:
+
+```shell
+docker compose up --build
+```
+
+2. Stop the app:
+
+```shell
+docker compose down
+```
+
+
+
+- The frontend runs at http://localhost:3005
