@@ -15,4 +15,5 @@ COPY . .
 EXPOSE 3001
 
 # Start command (overridden in docker-compose for dev)
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

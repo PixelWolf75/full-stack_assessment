@@ -48,3 +48,10 @@ docker compose down
 
 
 - The frontend runs at http://localhost:3005
+
+## Production Notes
+
+To seed the database in the docker instance run:
+```shell
+docker exec -it ecommerce-api npm run seed
+```
