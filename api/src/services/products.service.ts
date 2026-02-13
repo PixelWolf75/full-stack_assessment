@@ -1,16 +1,5 @@
 import pool from "../db/pool";
-
-// Utility to validate product input
-function validateProductInput(data: any, isUpdate = false) {
-    const { name, sku, price, stock } = data;
-
-    if (!isUpdate) {
-        if (!name || !sku) throw new Error("Product 'name' and 'sku' are required.");
-    }
-
-    if (price !== undefined && price < 0) throw new Error("'price' must be >= 0.");
-    if (stock !== undefined && stock < 0) throw new Error("'stock' must be >= 0.");
-}
+import { CreateProductBody, UpdateProductBody } from "../db/types";
 
 // -------------------------------------------------------
 // GET products with optional search and sorting
@@ -18,11 +7,15 @@ function validateProductInput(data: any, isUpdate = false) {
 export async function getProducts(query: any) {
     const { search, sort = "name", direction = "asc" } = query;
 
-    const validSortFields = ["price_cents", "name"];
+    const validSortFields = ["name", "price_cents", "stock_qty", "created_at"];
     const validDirections = ["asc", "desc"];
 
-    if (!validSortFields.includes(sort)) throw new Error("Invalid sort field.");
-    if (!validDirections.includes(direction.toLowerCase())) throw new Error("Invalid sort direction.");
+    if (!validSortFields.includes(sort)) {
+        throw new Error(`Invalid sort field. Must be one of: ${validSortFields.join(", ")}`);
+    }
+    if (!validDirections.includes(direction.toLowerCase())) {
+        throw new Error("Invalid sort direction. Must be 'asc' or 'desc'.");
+    }
 
     let sql = "SELECT * FROM products";
     const params: any[] = [];
@@ -34,68 +27,67 @@ export async function getProducts(query: any) {
 
     sql += ` ORDER BY ${sort} ${direction.toUpperCase()}`;
 
-    try {
-        const { rows } = await pool.query(sql, params);
-        return rows;
-    } catch (err) {
-        console.error("Error fetching products:", err);
-        throw err;
-    }
+    const { rows } = await pool.query(sql, params);
+    return rows;
 }
 
 // -------------------------------------------------------
 // CREATE a new product
+// Accepts price_cents and stock_qty directly — no conversion
 // -------------------------------------------------------
-export async function createProduct(data: any) {
-    validateProductInput(data);
+export async function createProduct(data: CreateProductBody) {
+    const { name, sku, price_cents, stock_qty } = data;
 
-    const { name, sku, price, stock } = data;
-    const price_cents = price !== undefined ? Math.round(price * 100) : 0;
-    const stock_qty = stock !== undefined ? stock : 0;
+    if (!name || !sku) {
+        throw new Error("'name' and 'sku' are required.");
+    }
+    if (price_cents === undefined || price_cents < 0) {
+        throw new Error("'price_cents' must be a number >= 0.");
+    }
+    if (stock_qty !== undefined && stock_qty < 0) {
+        throw new Error("'stock_qty' must be >= 0.");
+    }
 
     try {
         const { rows } = await pool.query(
-            `INSERT INTO products (name, sku, price_cents, stock_qty) 
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-            [name, sku, price_cents, stock_qty]
+            `INSERT INTO products (name, sku, price_cents, stock_qty)
+             VALUES ($1, $2, $3, $4)
+             RETURNING *`,
+            [name, sku, price_cents, stock_qty ?? 0]
         );
-
         return rows[0];
     } catch (err: any) {
         if (err.code === "23505") {
-            // Unique violation for SKU
             throw new Error(`Product with SKU '${sku}' already exists.`);
         }
-        console.error("Error creating product:", err);
         throw err;
     }
 }
 
 // -------------------------------------------------------
-// UPDATE an existing product
+// UPDATE price and/or stock on an existing product
 // -------------------------------------------------------
-export async function updateProduct(id: number, data: any) {
+export async function updateProduct(id: number, data: UpdateProductBody) {
     if (!id) throw new Error("Product ID is required.");
-    validateProductInput(data, true);
 
-    const { price, stock } = data;
-    const price_cents = price !== undefined ? Math.round(price * 100) : null;
-    const stock_qty = stock !== undefined ? stock : null;
+    const { price_cents, stock_qty } = data;
 
-    try {
-        const { rows } = await pool.query(
-            `UPDATE products 
-       SET price_cents = COALESCE($1, price_cents), 
-           stock_qty   = COALESCE($2, stock_qty) 
-       WHERE id = $3 
-       RETURNING *`,
-            [price_cents, stock_qty, id]
-        );
-
-        if (!rows.length) throw new Error(`Product with ID ${id} not found.`);
-        return rows[0];
-    } catch (err) {
-        console.error("Error updating product:", err);
-        throw err;
+    if (price_cents !== undefined && price_cents < 0) {
+        throw new Error("'price_cents' must be >= 0.");
     }
+    if (stock_qty !== undefined && stock_qty < 0) {
+        throw new Error("'stock_qty' must be >= 0.");
+    }
+
+    const { rows } = await pool.query(
+        `UPDATE products
+     SET price_cents = COALESCE($1, price_cents),
+         stock_qty   = COALESCE($2, stock_qty)
+     WHERE id = $3
+     RETURNING *`,
+        [price_cents ?? null, stock_qty ?? null, id]
+    );
+
+    if (!rows.length) throw new Error(`Product with ID ${id} not found.`);
+    return rows[0];
 }

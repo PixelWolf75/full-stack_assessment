@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy source code
-COPY src/db .
+COPY . .
 
 # Expose port
 EXPOSE 3001
