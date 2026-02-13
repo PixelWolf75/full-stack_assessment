@@ -29,8 +29,13 @@ function EditModal({ product, onClose, onSaved }: EditModalProps) {
     const price = Number(priceCents);
     const stock = Number(stockQty);
 
-    if (isNaN(price) || price < 0) return setError("'price_cents' must be a number ≥ 0.");
-    if (isNaN(stock) || stock < 0) return setError("'stock_qty' must be a number ≥ 0.");
+    // Validate if the price and stock are whole numbers and not negative
+    if (isNaN(price) || price < 0 || !Number.isInteger(price)) {
+      return setError("'price_cents' must be a whole number ≥ 0.");
+    }
+    if (isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+      return setError("'stock_qty' must be a whole number ≥ 0.");
+    }
 
     setLoading(true);
     try {
@@ -43,6 +48,24 @@ function EditModal({ product, onClose, onSaved }: EditModalProps) {
       setError(e.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  function handleStockQtyChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+
+    // Allow only digits and prevent empty input (e.g., a non-numeric input)
+    if (/^\d*$/.test(value)) {
+      setStockQty(value);
+    }
+  }
+
+  function handlePriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+
+    // Allow only digits and prevent empty input (e.g., a non-numeric input)
+    if (/^\d*$/.test(value)) {
+      setPriceCents(value);
     }
   }
 
@@ -67,7 +90,7 @@ function EditModal({ product, onClose, onSaved }: EditModalProps) {
                 type="number"
                 min="0"
                 value={priceCents}
-                onChange={e => setPriceCents(e.target.value)}
+                onChange={e => handlePriceChange(e)}
               />
               <div style={{ fontSize: 10, color: 'var(--text-dim)', marginTop: 4, fontFamily: 'var(--mono)' }}>
                 = {formatPrice(Number(priceCents) || 0)}
@@ -80,7 +103,7 @@ function EditModal({ product, onClose, onSaved }: EditModalProps) {
                 type="number"
                 min="0"
                 value={stockQty}
-                onChange={e => setStockQty(e.target.value)}
+                onChange={e => handleStockQtyChange(e)}
               />
             </div>
           </div>
@@ -118,8 +141,14 @@ function AddModal({ onClose, onAdded }: AddModalProps) {
     if (!sku.trim())  return setError("'sku' is required.");
     const price = Number(priceCents);
     const stock = Number(stockQty);
-    if (isNaN(price) || price < 0) return setError("'price_cents' must be ≥ 0.");
-    if (isNaN(stock) || stock < 0) return setError("'stock_qty' must be ≥ 0.");
+
+    // Validate if the price and stock are whole numbers and not negative
+    if (isNaN(price) || price < 0 || !Number.isInteger(price)) {
+      return setError("'price_cents' must be a whole number ≥ 0.");
+    }
+    if (isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+      return setError("'stock_qty' must be a whole number ≥ 0.");
+    }
 
     setLoading(true);
     try {
@@ -129,6 +158,30 @@ function AddModal({ onClose, onAdded }: AddModalProps) {
       setError(e.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  function handleStockQtyChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+
+    // Allow only digits and prevent empty input (e.g., a non-numeric input)
+    if (/^\d*$/.test(value)) {
+      setStockQty(value);
+    }
+    else {
+      return setError("'stock_qty' must be a whole number ≥ 0.");
+    }
+  }
+
+  function handlePriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+
+    // Allow only digits and prevent empty input (e.g., a non-numeric input)
+    if (/^\d*$/.test(value)) {
+      setPriceCents(value);
+    }
+    else {
+      return setError("'price_cents' must be a whole number ≥ 0.");
     }
   }
 
@@ -152,12 +205,12 @@ function AddModal({ onClose, onAdded }: AddModalProps) {
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">PRICE (CENTS)</label>
-              <input className="input input-mono" type="number" min="0" placeholder="e.g. 4999" value={priceCents} onChange={e => setPriceCents(e.target.value)} />
+              <input className="input input-mono" type="number" min="0" placeholder="e.g. 4999" value={priceCents} onChange={e => handlePriceChange(e)} />
               {priceCents && <div style={{ fontSize: 10, color: 'var(--text-dim)', marginTop: 4, fontFamily: 'var(--mono)' }}>= {formatPrice(Number(priceCents) || 0)}</div>}
             </div>
             <div className="form-group">
               <label className="form-label">STOCK QTY</label>
-              <input className="input input-mono" type="number" min="0" value={stockQty} onChange={e => setStockQty(e.target.value)} />
+              <input className="input input-mono" type="number" min="0" value={stockQty} onChange={e => handleStockQtyChange(e)} />
             </div>
           </div>
         </div>
