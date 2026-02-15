@@ -10,6 +10,8 @@ import {
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  console.log(`PATH = ${BASE_URL}${path}`)
+
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: { 'Content-Type': 'application/json' },
     ...options,

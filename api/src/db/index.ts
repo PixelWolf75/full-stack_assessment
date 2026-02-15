@@ -6,7 +6,7 @@ import seed from './seed';
 // @ts-ignore
 async function initDatabase(): Promise<void> {
   await createSchema();
-
+  await seed();
 }
 
 export default initDatabase;

@@ -12,7 +12,7 @@ const port = process.env.PORT || 3001;
 
 // CORS configuration (allowing only specific origin for security)
 const corsOptions = {
-  origin: ['http://localhost:3005', 'http://web:3005'],  // Allow frontend container in Docker or localhost
+  origin: ['http://localhost:3005', 'http://web:3005', "https://fsa.ericleon.uk"],  // Allow frontend container in Docker or localhost
   methods: ['GET', 'POST', 'PATCH'],  // Allow necessary methods
   allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
 };

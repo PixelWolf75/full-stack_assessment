@@ -49,9 +49,8 @@ docker compose down
 
 - The frontend runs at http://localhost:3005
 
+- the domain name is https://fsa.ericleon.uk/
+
 ## Production Notes
 
-To seed the database in the docker instance run:
-```shell
-docker exec -it ecommerce-api npm run seed
-```
+The database is seeded upon startup automatically, however it cannot be called upon cmd
